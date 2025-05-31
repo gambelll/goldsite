@@ -1,10 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-$servername = "localhost";
-$username = "root";      // 기본 XAMPP root 계정
-$password = "";          // 기본 XAMPP root 비밀번호 없음
-$dbname = "user_db";  // 본인 DB 이름으로 변경
+$host = "sql311.infinityfree.com";
+$user = "if0_39128377";
+$password = "Rpaqpf1225";
+$dbname = "if0_39128377_user_db";
 
 // MySQL 연결
 $conn = new mysqli($servername, $username, $password, $dbname);
