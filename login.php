@@ -5,10 +5,10 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$dbname = 'user_db';
+$host = "sql311.infinityfree.com";
+$user = "if0_39128377";
+$password = "Rpaqpf1225";
+$dbname = "if0_39128377_user_db";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
