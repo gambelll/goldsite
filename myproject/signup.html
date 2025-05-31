@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>회원가입 - 금강부대</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="favicon/round_favicon.png" type="image/png" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .signup-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 24px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 40px 10px 12px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1.5px solid #ccc;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    .error-message {
+      color: #d93025;
+      font-size: 13px;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+    .check-id-btn {
+      position: absolute;
+      right: 5px;
+      top: 32px;
+      padding: 6px 10px;
+      font-size: 13px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .check-id-btn:hover {
+      background-color: #0056b3;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 34px;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+      color: #666;
+    }
+    button.submit-btn {
+      width: 100%;
+      background-color: #007bff;
+      border: none;
+      padding: 12px 0;
+      font-weight: 700;
+      font-size: 18px;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button.submit-btn:hover {
+      background-color: #0056b3;
+    }
+    .success-message {
+      color: green;
+      font-size: 14px;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="signup-container">
+  <h2>회원가입</h2>
+  <form id="signupForm" action="signup_process.php" method="post" novalidate>
+    <div class="form-group">
+      <label for="email">이메일 주소</label>
+      <input type="email" id="email" name="email" placeholder="example@domain.com" required />
+      <div class="error-message" id="emailError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="userid">아이디</label>
+      <input type="text" id="userid" name="userid" placeholder="아이디 입력" required autocomplete="off" />
+      <button type="button" class="check-id-btn" id="checkIdBtn">중복확인</button>
+      <div class="error-message" id="useridError"></div>
+      <div class="success-message" id="useridSuccess"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" placeholder="영문+숫자+특수문자 8자 이상" required />
+      <span class="toggle-password" id="togglePassword" title="비밀번호 보기/숨기기">👁️</span>
+      <div class="error-message" id="passwordError"></div>
+    </div>
+
+    <div class="form-group">
+      <label style="display: flex; align-items: center;">
+        <input type="checkbox" id="termsCheckbox" style="margin-right: 8px;" />
+        이용약관에 동의합니다.
+      </label>
+      <div class="error-message" id="termsError"></div>
+    </div>
+
+    <button type="submit" class="submit-btn">회원가입</button>
+  </form>
+</div>
+
+<script>
+  const signupForm = document.getElementById('signupForm');
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+
+  const useridInput = document.getElementById('userid');
+  const useridError = document.getElementById('useridError');
+  const useridSuccess = document.getElementById('useridSuccess');
+  const checkIdBtn = document.getElementById('checkIdBtn'); // 중복확인 버튼 가져옴
+
+  const passwordInput = document.getElementById('password');
+  const passwordError = document.getElementById('passwordError');
+  const togglePassword = document.getElementById('togglePassword'); // 비밀번호 토글 버튼 가져옴
+
+  const termsCheckbox = document.getElementById('termsCheckbox');
+  const termsError = document.getElementById('termsError');
+
+  let isIdChecked = false; // 아이디 중복확인 여부 (추가 기능 구현 시 필요)
+
+  // --- 클라이언트 측 유효성 검사 함수 ---
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  function validatePassword(password) {
+    // 영문, 숫자, 특수문자 포함 8자 이상
+    const re = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+    return re.test(password);
+  }
+
+  // --- 폼 제출 이벤트 처리 ---
+  signupForm.addEventListener('submit', async function(event) {
+    event.preventDefault(); // 기본 폼 제출(페이지 이동) 막기
+
+    // 에러/성공 메시지 초기화
+    emailError.textContent = '';
+    useridError.textContent = '';
+    passwordError.textContent = '';
+    termsError.textContent = '';
+    useridSuccess.textContent = '';
+
+    // 클라이언트 측 유효성 검사 실행
+    let isValid = true;
+    if (!validateEmail(emailInput.value)) {
+        emailError.textContent = '올바른 이메일 형식이 아닙니다.';
+        isValid = false;
+    }
+    if (useridInput.value.trim() === '') {
+        useridError.textContent = '아이디를 입력해주세요.';
+        isValid = false;
+    }
+    if (!validatePassword(passwordInput.value)) {
+        passwordError.textContent = '영문, 숫자, 특수문자 포함 8자 이상이어야 합니다.';
+        isValid = false;
+    }
+     if (!termsCheckbox.checked) {
+        termsError.textContent = '이용약관에 동의해야 합니다.';
+        isValid = false;
+    }
+
+    // 클라이언트 검사 통과 못하면 여기서 중단
+    if (!isValid) {
+        return;
+    }
+
+    // 폼 데이터 가져오기
+    const formData = new FormData(signupForm);
+
+    try {
+        // PHP 파일로 데이터 비동기 전송 (Fetch API)
+        const response = await fetch('signup_process.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        // PHP에서 받은 JSON 응답 파싱
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            // 회원가입 성공 시
+            alert(result.message); // 팝업 메시지 띄우기
+            window.location.href = 'login.html'; // login.html 페이지로 이동
+        } else {
+            // 회원가입 실패 (중복, DB 오류 등) 시
+            alert("회원가입 실패: " + result.message); // 실패 팝업 메시지 띄우기 (또는 에러 메시지 아래 표시)
+
+            // 특정 에러 메시지에 따라 특정 input 아래에 표시할 수도 있음
+            if (result.message.includes('아이디') || result.message.includes('이메일')) {
+                 useridError.textContent = result.message;
+            }
+            // 다른 종류의 에러 처리 추가 가능
+        }
+
+    } catch (error) {
+        // 네트워크 통신 오류 등 예외 발생
+        console.error('Error:', error);
+        alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  });
+
+  // --- 비밀번호 보이기/숨기기 기능 ---
+  if (togglePassword) {
+      togglePassword.addEventListener('click', function() {
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+          this.textContent = type === 'password' ? '👁️' : '🙈'; // 눈 모양 아이콘 변경
+      });
+  }
+
+
+  checkIdBtn.addEventListener('click', async function() {
+  const userid = useridInput.value.trim();
+
+  if (!userid) {
+    useridError.textContent = '아이디를 입력해주세요.';
+    useridSuccess.textContent = '';
+    return;
+  }
+
+  try {
+    const response = await fetch('check_id.php?userid=' + encodeURIComponent(userid));
+    const result = await response.json();
+
+    if (result.exists) {
+      useridError.textContent = '이미 사용 중인 아이디입니다.';
+      useridSuccess.textContent = '';
+      isIdChecked = false;
+    } else {
+      useridError.textContent = '';
+      useridSuccess.textContent = '사용 가능한 아이디입니다.';
+      isIdChecked = true;
+    }
+  } catch (error) {
+    useridError.textContent = '서버와 통신 중 오류가 발생했습니다.';
+    useridSuccess.textContent = '';
+    console.error(error);
+    isIdChecked = false;
+  }
+});
+
+  // --- 아이디 중복확인 버튼 기능 (이 부분은 백엔드 API가 필요해서 지금은 작동 안 함) ---
+  // checkIdBtn.addEventListener('click', function() {
+  //    alert('아이디 중복 확인 기능은 백엔드 개발이 필요합니다.');
+  //    // TODO: 여기에 아이디 중복 확인 API 호출 코드를 작성해야 함
+  // });
+
+
+</script>
+
+</body>
+</html>

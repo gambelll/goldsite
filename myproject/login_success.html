@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>금강부대 | GOLD RIVER ROKA</title>
+  <link rel="icon" href="favicon/round_favicon.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background-color: white;
+      border-bottom: 2px solid #e0e0e0;
+      position: relative;
+      z-index: 100;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-section img {
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .menu {
+      display: flex;
+      gap: 40px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: black;
+      position: relative;
+    }
+
+    .menu a::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 2px;
+      background: black;
+      transition: 0.3s;
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+    }
+
+    .menu a:hover::after {
+      width: 100%;
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* 햄버거 메뉴 항상 보이게 */
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      z-index: 110; /* 사이드바 위 */
+    }
+
+    .hamburger div {
+      width: 24px;
+      height: 3px;
+      background-color: black;
+      margin: 4px 0;
+    }
+
+    /* 사이드 메뉴 스타일 */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -100%; /* 기본 상태는 화면 밖으로 완전히 숨김 */
+      width: 20%;
+      min-width: 220px; /* 너무 작아지지 않도록 최소 너비 설정 */
+      height: 100vh;
+      background-color: white;
+      box-shadow: -3px 0 10px rgba(0,0,0,0.2);
+      padding: 30px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: right 0.3s ease;
+      z-index: 105;
+
+      overflow-y: auto; /* 세로 스크롤 추가 */
+      box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    }
+
+    .side-menu.open {
+      right: 0; /* 사이드 메뉴가 보이도록 이동 */
+    }
+
+    .side-menu nav {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .side-menu nav a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .side-menu nav a:hover {
+      color: #007bff;
+    }
+
+    /* 회원가입, 로그인 버튼 영역 */
+    .auth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-buttons button {
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .auth-buttons .signup {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .auth-buttons .signup:hover {
+      background-color: #0056b3;
+    }
+
+    .auth-buttons .login {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .auth-buttons .login:hover {
+      background-color: #5a6268;
+    }
+
+    /* 닫기 버튼 스타일 */
+    .side-menu .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    @media (max-width: 768px) {
+      .menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <a class="logo-section" href="index.html">
+      <img src="favicon/round_favicon.png" alt="부대 로고" />
+      <span class="logo-text">금강부대 | GOLD RIVER ROKA</span>
+    </a>
+
+    <nav class="menu" id="navMenu">
+      <a href="info.html">게임소개</a>
+      <a href="https://www.army.mil.kr/board">부대소식</a>
+      <a href="https://www.goarmy.mil.kr">육군모집</a>
+      <a href="https://www.minwon.go.kr">전자민원창구</a>
+      <a href="https://www.epeople.go.kr">국민참여</a>
+    </nav>
+
+    <div class="right-controls">
+      <span id="langToggle" onclick="toggleLanguage()">🌐 ENG</span>
+      <div class="hamburger" onclick="toggleSideMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </header>
+
+  <aside class="side-menu" id="sideMenu">
+    <div class="close-btn" onclick="toggleSideMenu()">&times;</div>
+    <nav>
+      <a href="info.html">게임소개</a>
+      <a href="https://www.army.mil.kr/board">부대소식</a>
+      <a href="https://www.goarmy.mil.kr">육군모집</a>
+      <a href="https://www.minwon.go.kr">전자민원창구</a>
+      <a href="https://www.epeople.go.kr">국민참여</a>
+    </nav>
+    <div class="auth-buttons">
+      <button class="signup" onclick="location.href='signup.html'">회원가입</button>
+      <button class="login" onclick="location.href='login.html'">로그인</button>
+    </div>
+  </aside>
+
+  <script>
+    function toggleSideMenu() {
+      const sideMenu = document.getElementById("sideMenu");
+      sideMenu.classList.toggle("open");
+    }
+
+    function toggleLanguage() {
+      const toggle = document.getElementById("langToggle");
+      const navMenu = document.getElementById("navMenu");
+      const sideMenuNav = document.querySelector(".side-menu nav");
+      if (toggle.innerText.includes("ENG")) {
+        toggle.innerText = "🌐 KO";
+        navMenu.innerHTML = `
+          <a href="info.html">About</a>
+          <a href="https://www.army.mil.kr/board">News</a>
+          <a href="https://www.goarmy.mil.kr">Join</a>
+          <a href="https://www.minwon.go.kr">Civil Service</a>
+          <a href="https://www.epeople.go.kr">Public Voice</a>
+        `;
+        sideMenuNav.innerHTML = `
+          <a href="info.html">About</a>
+          <a href="https://www.army.mil.kr/board">News</a>
+          <a href="https://www.goarmy.mil.kr">Join</a>
+          <a href="https://www.minwon.go.kr">Civil Service</a>
+          <a href="https://www.epeople.go.kr">Public Voice</a>
+        `;
+      } else {
+        toggle.innerText = "🌐 ENG";
+        navMenu.innerHTML = `
+          <a href="info.html">게임소개</a>
+          <a href="https://www.army.mil.kr/board">부대소식</a>
+          <a href="https://www.goarmy.mil.kr">육군모집</a>
+          <a href="https://www.minwon.go.kr">전자민원창구</a>
+          <a href="https://www.epeople.go.kr">국민참여</a>
+        `;
+        sideMenuNav.innerHTML = `
+          <a href="info.html">게임소개</a>
+          <a href="https://www.army.mil.kr/board">부대소식</a>
+          <a href="https://www.goarmy.mil.kr">육군모집</a>
+          <a href="https://www.minwon.go.kr">전자민원창구</a>
+          <a href="https://www.epeople.go.kr">국민참여</a>
+        `;
+      }
+    }
+
+    const loggedInUserId = localStorage.getItem('userid') || '';
+  const rightControls = document.querySelector(".right-controls");
+  const sideMenu = document.getElementById("sideMenu");
+  const sideMenuAuthButtons = sideMenu.querySelector(".auth-buttons");
+
+  function updateMenuForLogin() {
+    if (loggedInUserId) {
+      let userIdSpan = rightControls.querySelector(".user-id-display");
+      if (!userIdSpan) {
+        userIdSpan = document.createElement("span");
+        userIdSpan.classList.add("user-id-display");
+        userIdSpan.style.fontWeight = "bold";
+        userIdSpan.style.marginRight = "15px";
+        rightControls.insertBefore(userIdSpan, rightControls.firstChild);
+      }
+      userIdSpan.textContent = loggedInUserId + " 님";
+
+      sideMenuAuthButtons.innerHTML = `
+        <div style="margin-bottom: 10px; font-weight: bold;">${loggedInUserId} 님</div>
+        <button class="logout">로그아웃</button>
+      `;
+
+      const logoutBtn = sideMenuAuthButtons.querySelector(".logout");
+      logoutBtn.style.backgroundColor = "#dc3545";
+      logoutBtn.style.color = "white";
+      logoutBtn.style.border = "none";
+      logoutBtn.style.padding = "10px";
+      logoutBtn.style.borderRadius = "4px";
+      logoutBtn.style.cursor = "pointer";
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem('userid');
+        window.location.href = "index.html"; // 로그아웃 후 새로고침
+      });
+    } else {
+      rightControls.querySelectorAll(".user-id-display").forEach(el => el.remove());
+      sideMenuAuthButtons.innerHTML = `
+        <button class="login" onclick="location.href='index.html'">로그아웃</button>
+      `;
+    }
+  }
+
+  updateMenuForLogin();
+  </script>
+
+</body>
+</html>
