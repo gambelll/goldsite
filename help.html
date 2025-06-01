@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval'">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'">
   <meta charset="UTF-8" />
   <title>전자민원창구 | GOLD RIVER ROKA</title>
   <link rel="icon" href="favicon/round_favicon.png" type="image/png" />
@@ -62,13 +62,13 @@
     <h2>전자민원 접수</h2>
     <form id="civilForm">
       <label for="roblox">로블록스 닉네임</label>
-      <input type="text" id="roblox" name="roblox" required>
+      <input type="text" id="roblox" name="roblox" autocomplete="off" required>
 
       <label for="discord">디스코드 닉네임</label>
-      <input type="text" id="discord" name="discord" required>
+      <input type="text" id="discord" name="discord" autocomplete="off" required>
 
       <label for="email">이메일 (접수 안내를 받을 이메일)</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" autocomplete="email" required>
 
       <label for="category">카테고리</label>
       <select id="category" name="category" required>
