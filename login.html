@@ -127,6 +127,7 @@
 </div>
 
 <script>
+<script>
   const loginForm = document.getElementById('loginForm');
   const useridInput = document.getElementById('userid');
   const useridError = document.getElementById('useridError');
@@ -160,6 +161,11 @@
         body: formData
       });
 
+      // HTTP 상태 체크 추가
+      if (!response.ok) {
+        throw new Error(`서버 응답 오류 (HTTP ${response.status})`);
+      }
+
       const result = await response.json();
 
       if (result.status === 'success') {
@@ -170,18 +176,20 @@
         alert('로그인 실패: ' + result.message);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Fetch 오류:', error);
       alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   });
 
   if (togglePassword) {
-    togglePassword.addEventListener('click', function() {
+    togglePassword.addEventListener('click', function () {
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
       this.textContent = type === 'password' ? '👁️' : '🙈';
     });
   }
+</script>
+
 </script>
 
 </body>
