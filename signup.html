@@ -271,7 +271,8 @@
   }
 
   try {
-    const response = await fetch('check_id.php?userid=' + encodeURIComponent(userid));
+    const response = await fetch('http://php.goldriver.kro.kr/check_id.php?userid=' + encodeURIComponent(userid));
+
     const result = await response.json();
 
     if (result.exists) {
