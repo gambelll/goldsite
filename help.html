@@ -5,10 +5,8 @@
   <title>전자민원창구 | GOLD RIVER ROKA</title>
   <link rel="icon" href="favicon/round_favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- 상단 CSS 및 네비게이션은 기존 코드에 포함된 것으로 가정 -->
-
   <style>
-    /* 민원 폼 추가 스타일 */
+    /* 기존 스타일 유지 */
     .form-container {
       max-width: 600px;
       margin: 80px auto;
@@ -59,9 +57,6 @@
 </head>
 
 <body>
-  <!-- 상단 네비게이션 바 그대로 유지 -->
-  <!-- 예: <div class="top-bar"> ... </div> -->
-
   <div class="form-container">
     <h2>전자민원 접수</h2>
     <form id="civilForm">
@@ -70,6 +65,9 @@
 
       <label for="discord">디스코드 닉네임</label>
       <input type="text" id="discord" name="discord" required>
+
+      <label for="email">이메일 (접수 안내를 받을 이메일)</label>
+      <input type="email" id="email" name="email" required>
 
       <label for="category">카테고리</label>
       <select id="category" name="category" required>
@@ -92,11 +90,12 @@
       const data = {
         roblox: document.getElementById('roblox').value.trim(),
         discord: document.getElementById('discord').value.trim(),
+        email: document.getElementById('email').value.trim(),
         category: document.getElementById('category').value.trim(),
         message: document.getElementById('message').value.trim()
       };
 
-      if (!data.roblox || !data.discord || !data.category || !data.message) {
+      if (!data.roblox || !data.discord || !data.email || !data.category || !data.message) {
         alert("모든 항목을 입력해주세요.");
         return;
       }
